@@ -1,0 +1,78 @@
+version: '3'
+
+# services
+# - - - - - - - - - - - - - - - - - -
+services:
+
+  # frontend (nuxt prod server)
+  # - - - - - - - - - - - - - - - - - -
+  # frontend:
+  #   build:
+  #     dockerfile: Dockerfile.frontend.prod
+  #     context: ./frontend
+  #   env_file:
+  #     - ./conf/frontend-prod.env
+  #   restart: "no"
+  #   ports:
+  #     - "8080"
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - prod-network
+
+  # backend-service (nestjs)
+  # - - - - - - - - - - - - - - - - - -
+  backend:
+    build:
+      dockerfile: Dockerfile.backend.prod
+      context: ./backend
+    env_file:
+      - ./conf/mysql.env
+    restart: "no"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mariadb
+    networks:
+      - prod-network
+
+  # maria-service (mysql)
+  # - - - - - - - - - - - - - - - - - -
+  mariadb:
+    image: mariadb
+    env_file:
+      - ./conf/mysql.env
+    restart: "unless-stopped"
+    ports:
+      - "3306"
+    volumes:
+      - ./db-data:/var/lib/mysql
+    networks:
+      - prod-network
+
+  # nginx-service
+  #   proxy / - frontend
+  #   proxy /api - backend
+  # - - - - - - - - - - - - - - - - - -
+  # nginx:
+  #   image: nginx:stable-alpine
+  #   links:
+  #     - backend
+  #     - frontend
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./frontend/nginx/default.conf.prod:/etc/nginx/conf.d/default.conf
+  #   networks:
+  #     - prod-network
+  #   depends_on:
+  #     - frontend
+  #     - backend
+
+# networks
+# - - - - - - - - - - - - - - - - - -
+networks:
+  prod-network:
+    driver: bridge
+
+

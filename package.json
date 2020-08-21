@@ -1,0 +1,14 @@
+{
+  "name": "my-kurs",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Roman Kairis",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "./conf/bin/start-dev.sh",
+    "frontend": "./conf/bin/start-frontend.sh",
+    "prod": "./conf/bin/start-prod.sh",
+    "test": "./conf/bin/start-test.sh"
+  }
+}
